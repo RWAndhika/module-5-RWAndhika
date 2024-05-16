@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import DisplayPokemon from "@/components/DisplayPokemon";
 import LogOutComponent from "@/components/LogOutComponent";
 import SuggestionBarList from "@/components/SuggestionBarList";
+import { GetServerSideProps } from "next";
 
 const URL = 'https://pokeapi.co/api/v2/pokemon/'
 
@@ -27,7 +28,11 @@ export type Info = {
     url: string
 }
 
-const Index = () => {
+interface InfoProps {
+    results: Info[];
+}
+
+const Index = ({ results }: InfoProps) => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [pokemonName, setPokemonName] = useState<string>("");
@@ -92,6 +97,7 @@ const Index = () => {
     }
 
     useEffect(() => {
+        console.log("info", results);
         getAllPokemon();
         if (localStorage.getItem('favorites') === null) {
             localStorage.setItem('favorites', "[]");
@@ -125,21 +131,25 @@ const Index = () => {
         }
     }
 
-    const getAllPokemon = async () => {
-        try {
-            setLoading(true)
-            const response = await fetch(`${GET_ALL_URL}`)
-            const data = await response.json()
-            if (!response.ok) {
-                throw new Error("get pokemon data by name failed!");
-            } else {
-                setAllPokemonName(data.results);
-                setLoading(false)
-            }
-          } catch (error) {
-            alert(error)
-            setLoading(false)
-          }
+    // const getAllPokemon = async () => {
+    //     try {
+    //         setLoading(true)
+    //         const response = await fetch(`${GET_ALL_URL}`)
+    //         const data = await response.json()
+    //         if (!response.ok) {
+    //             throw new Error("get pokemon data by name failed!");
+    //         } else {
+    //             setAllPokemonName(data.results);
+    //             setLoading(false)
+    //         }
+    //       } catch (error) {
+    //         alert(error)
+    //         setLoading(false)
+    //       }
+    // }
+
+    const getAllPokemon = () => {
+        setAllPokemonName(results);
     }
 
     const searchPokemon = async () => {
@@ -221,5 +231,17 @@ const Index = () => {
 
     );
 };
+
+export const getServerSideProps: GetServerSideProps = async () => {
+    const response = await fetch(GET_ALL_URL);
+    const info = await response.json();
+    const results = info.results
+    console.log("data from server:", results);
+    return {
+      props: {
+        results,
+      },
+    };
+  };
 
 export default Index;
