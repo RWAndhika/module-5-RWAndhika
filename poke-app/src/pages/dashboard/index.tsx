@@ -30,10 +30,10 @@ export type Info = {
 }
 
 interface InfoProps {
-    results: Info[];
+    propsResults: Info[];
 }
 
-const Index = ({ results }: InfoProps) => {
+const Index = ({ propsResults }: InfoProps) => {
 
     useAuth();
 
@@ -100,7 +100,6 @@ const Index = ({ results }: InfoProps) => {
     }
 
     useEffect(() => {
-        console.log("info", results);
         getAllPokemon();
         if (localStorage.getItem('favorites') === null) {
             localStorage.setItem('favorites', "[]");
@@ -134,25 +133,8 @@ const Index = ({ results }: InfoProps) => {
         }
     }
 
-    // const getAllPokemon = async () => {
-    //     try {
-    //         setLoading(true)
-    //         const response = await fetch(`${GET_ALL_URL}`)
-    //         const data = await response.json()
-    //         if (!response.ok) {
-    //             throw new Error("get pokemon data by name failed!");
-    //         } else {
-    //             setAllPokemonName(data.results);
-    //             setLoading(false)
-    //         }
-    //       } catch (error) {
-    //         alert(error)
-    //         setLoading(false)
-    //       }
-    // }
-
     const getAllPokemon = () => {
-        setAllPokemonName(results);
+        setAllPokemonName(propsResults);
     }
 
     const searchPokemon = async () => {
@@ -238,11 +220,11 @@ const Index = ({ results }: InfoProps) => {
 export const getServerSideProps: GetServerSideProps = async () => {
     const response = await fetch(GET_ALL_URL);
     const info = await response.json();
-    const results = info.results
-    console.log("data from server:", results);
+    const propsResults = info.results
+    console.log("data from server:", propsResults);
     return {
       props: {
-        results,
+        propsResults,
       },
     };
   };
