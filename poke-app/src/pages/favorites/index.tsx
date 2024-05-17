@@ -2,8 +2,11 @@ import { Pokemon } from "../dashboard";
 import { useEffect, useState } from "react";
 import DisplayPokemon from "@/components/DisplayPokemon";
 import { useRouter } from "next/router";
+import useAuth from "@/middleware/auth";
 
 const Index = () => {
+
+    useAuth();
 
     const [loading, setLoading] = useState<boolean>(false);
     const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);

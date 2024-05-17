@@ -4,6 +4,7 @@ import DisplayPokemon from "@/components/DisplayPokemon";
 import LogOutComponent from "@/components/LogOutComponent";
 import SuggestionBarList from "@/components/SuggestionBarList";
 import { GetServerSideProps } from "next";
+import useAuth from "@/middleware/auth";
 
 const URL = 'https://pokeapi.co/api/v2/pokemon/'
 
@@ -33,6 +34,8 @@ interface InfoProps {
 }
 
 const Index = ({ results }: InfoProps) => {
+
+    useAuth();
 
     const [loading, setLoading] = useState<boolean>(false);
     const [pokemonName, setPokemonName] = useState<string>("");
